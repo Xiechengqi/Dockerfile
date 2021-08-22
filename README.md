@@ -309,3 +309,26 @@ ENTRYPOINT ["./freedns-go"]
 CMD ["-f", "114.114.114.114:53", "-c", "8.8.8.8:53", "-l", "0.0.0.0:53"]
 ```
 </code></pre></details>
+
+	
+**https://github.com/sorenisanerd/gotty/blob/master/Dockerfile**
+<details><summary>展开</summary><pre><code>
+
+``` yaml
+FROM golang:1.13.1
+
+WORKDIR /gotty
+COPY . /gotty
+RUN CGO_ENABLED=0 make
+
+FROM alpine:latest
+
+RUN apk update && \
+    apk upgrade && \
+    apk --no-cache add ca-certificates && \
+    apk add bash
+WORKDIR /root
+COPY --from=0 /gotty/gotty /usr/bin/
+CMD ["gotty",  "-w", "bash"]
+```
+</code></pre></details>
